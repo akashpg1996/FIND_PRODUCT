@@ -1,7 +1,7 @@
 import re
 import numpy as np
 
-def parse_trajectory_file(filename):
+def parse_trajectory_file(filename,natoms):
     trajectories = []
     with open(filename, "r") as f:
         lines = f.readlines()
@@ -45,44 +45,37 @@ def parse_trajectory_file(filename):
             traj["total_energy"] = total
             i += 1
 
-            # ---- 5. Q/P table ----
+          # ---- 5. Q/P table ----
             Q = []
             P = []
             i += 1  # skip header line 'Q   P'
 
             # read until 'ATOMS' appears
-            while i < n and "ATOMS" not in lines[i]:
-                parts = lines[i].split()
-                if len(parts) == 6:
-                    # 3 Q values, 3 P values
-                    q1, q2, q3, p1, p2, p3 = map(float, parts)
-                    Q.append([q1, q2, q3])
-                    P.append([p1, p2, p3])
-                i += 1
+            for _ in range(natoms):
+                  if i >= n:
+                        break   # safety check if file ends unexpectedly
+
+                  parts = lines[i].split()
+
+                  if len(parts) != 6:
+                     raise ValueError(f"Expected 6 numbers for Q,P but got {len(parts)} on line {i}: {parts}")
+
+                # Extract Q and P for this atom
+                  q1, q2, q3, p1, p2, p3 = map(float, parts)
+
+                  Q.append([q1, q2, q3])
+                  P.append([p1, p2, p3])
+
+                  i += 1
 
             traj["Q"] = Q
             traj["P"] = P
-
-            # ---- 6. Bond length section ----
-            bonds = []
-            i += 1  # skip 'ATOMS BOND LENGTH' line
-
-            while i < n and lines[i].strip() != "" and "TRAJECTORY" not in lines[i]:
-                parts = lines[i].split()
-                if len(parts) == 3:
-                    atom1 = int(parts[0])
-                    atom2 = int(parts[1])
-                    length = float(parts[2])
-                    bonds.append((atom1, atom2, length))
-                i += 1
-
-            traj["bonds"] = bonds
-
-            # save trajectory
+        
             trajectories.append(traj)
-        else:
-            i += 1
 
+        else:
+            i+=1
+       
     return trajectories
 
 def dfs(start, adjacency_matrix, visited, component):
