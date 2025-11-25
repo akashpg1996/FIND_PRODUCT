@@ -1,5 +1,5 @@
 import numpy as np
-from src.functions import *
+from FIND_PRODUCT.functions import *
 
 # ----------------- User settings -----------------
 elements = ["C", "N", "C", "H", "H", "H", "I"]   # must match atom order
