@@ -1,4 +1,4 @@
-# Find Product Python Project
+# Find Product Project
 This program can find products from trajectories generated from the Venus chemical dynamics program.
 
 ## Structure
