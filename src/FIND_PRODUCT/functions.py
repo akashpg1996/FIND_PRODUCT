@@ -16,25 +16,25 @@ def parse_trajectory_file(filename,natoms):
         if "TRAJECTORY NUMBER" in line:
             traj = {}
 
-            # ---- 1. trajectory number ----
+            # trajectory number
             m = re.search(r"TRAJECTORY NUMBER\s+(\d+)", line)
             traj_number = int(m.group(1))
             traj["trajectory_number"] = traj_number
 
             i += 1
 
-            # ---- 2. cycle count & time ----
+            #  cycle count & time
             m = re.search(r"CYCLE COUNT IS:\s+(\d+).+TIME:\s+([0-9.E+-]+)", lines[i])
             traj["cycle_count"] = int(m.group(1))
             traj["time"] = float(m.group(2))
 
             i += 1
 
-            # ---- 3. random number line ----
+            #  random number line 
             traj["random_numbers"] = lines[i].strip()
             i += 1
 
-            # ---- 4. energies ----
+            #  energies 
             kinetic = float(lines[i].split()[2])
             potential = float(lines[i].split()[5])
             traj["kinetic_energy"] = kinetic
@@ -45,15 +45,15 @@ def parse_trajectory_file(filename,natoms):
             traj["total_energy"] = total
             i += 1
 
-            # ---- 5. Q/P table ----
+            #  Q/P table 
             Q = []
             P = []
-            i += 1  # skip header line 'Q   P'
+            i += 1  
 
             # read until 'ATOMS' appears
             for _ in range(natoms):
                   if i >= n:
-                        break   # safety check if file ends unexpectedly
+                        break   
 
                   parts = lines[i].split()
 
@@ -178,7 +178,7 @@ def write_xyz_block(f, coords, elements, header):
 
 
 
-# ----------------- Read multi-frame XYZ (product file) -----------------
+# Read multi-frame XYZ (product file) 
 
 def read_multi_xyz(filename):
     """
@@ -234,7 +234,7 @@ import itertools
 
 
 # ============================================================
-# 🔹 Canonical hashing utilities
+# Canonical hashing utilities
 # ============================================================
 
 def canonical_hash_component(comp, adj, elements):
@@ -265,7 +265,7 @@ def canonical_hash_product(components, adj, elements):
 
 
 # ============================================================
-# 🔹 Main function (rewritten)
+# Main function 
 # ============================================================
 def build_product_index_and_write_files(
         trajectory_file, elements,
