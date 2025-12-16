@@ -1,4 +1,4 @@
-# Find Product Project
+# Find Product Code
 This program can find products from the trajectory output of the Venus chemical dynamics program.
 
 ## Structure
